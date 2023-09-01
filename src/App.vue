@@ -1,6 +1,10 @@
 <script setup>
-
 import { reactive } from 'vue';
+import Cabecalho from './components/Cabecalho.vue'
+import Formulario from './components/Formulario.vue'
+import ListaDeTarefas from './components/ListaDeTarefas.vue'
+
+
 
 const estado = reactive({
   tarefas: [
@@ -50,40 +54,13 @@ const cadastrarTarefa = () => {
 
 <template>
   <div class="container">
-    <header class="p-5 bm--4 mt-4 bg-light rounded-3">
-      <h1>Minhas tarefas</h1>
-      <p>Você possui {{ getTarefasFinalizadas(false).length }} tarefas pendentes</p>
-    </header>
-    <form @submit.prevent="cadastrarTarefa">
-      <div class="row">
-        <div class="col">
-          <input :value="estado.novaTarefa" @change="evt => estado.novaTarefa = evt.target.value" required class="form-control" type="text"
-            placeholder="Digita a tarefa">
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary">Inserir</button>
-        </div>
-        <div class="col-md-2">
-          <select @change="evt => estado.filtro = evt.target.value" class="form-control">
-            <option value="todas">Todas as tarefas</option>
-            <option value="pendentes">Pendentes</option>
-            <option value="finalizadas">Finalizadas</option>
-          </select>
-        </div>
-      </div>
-    </form>
-    <ul class="list-group mt-4">
-      <li v-for="tarefa in getTarefasFiltradas()" class="list-group-item">
-        <input type="checkbox" :checked="tarefa.finalizada" :id="tarefa.titulo"
-          @change="evt => tarefa.finalizada = evt.target.checked">
-        <label :class="{ finished: tarefa.finalizada }" class="ms-3" :for="tarefa.titulo">{{ tarefa.titulo }}</label>
-      </li>
-    </ul>
+    <Cabecalho :tarefas-pendentes="getTarefasFinalizadas(false).length"/>
+
+    <Formulario :cadastrar-tarefa="cadastrarTarefa" :nova-tarefa="estado.novaTarefa" :trocar-filtro="evt => estado.filtro = evt.target.value" :edita-nova-tarefa="evt => estado.novaTarefa = evt.target.value"/>
+
+    <ListaDeTarefas :lista-de-tarefas="getTarefasFiltradas()"/>
   </div>
 </template>
 
 <style scoped>
-.finished {
-  text-decoration: line-through;
-}
 </style>
